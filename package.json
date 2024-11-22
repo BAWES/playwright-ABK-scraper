@@ -10,8 +10,8 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@playwright/test": "^1.49.0",
     "@linear/sdk": "^2.0.0",
+    "@playwright/test": "^1.49.0",
     "@types/node": "^22.9.1"
   },
   "dependencies": {
