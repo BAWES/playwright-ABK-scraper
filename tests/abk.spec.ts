@@ -54,6 +54,9 @@ test('Login to ABK', async ({ page }) => {
   // Wait for OTP input and get OTP
   const otpInput = page.getByLabel('OTP');
   await otpInput.waitFor();
+
+  // Wait 15 seconds before checking Linear for OTP
+  await new Promise(resolve => setTimeout(resolve, 15000));
   
   const otp = await getOTPFromLinear();
   if (!otp) {
@@ -62,6 +65,6 @@ test('Login to ABK', async ({ page }) => {
 
   // Enter OTP
   await otpInput.fill(otp);
-  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
   await page.waitForLoadState('networkidle');
 });
