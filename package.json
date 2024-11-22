@@ -2,17 +2,19 @@
   "name": "playwright-banking",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "@playwright/test": "^1.49.0",
+    "@linear/sdk": "^2.0.0",
     "@types/node": "^22.9.1"
   },
   "dependencies": {
-    "@linear/sdk": "^33.0.0",
     "dotenv": "^16.4.5"
   }
 }
