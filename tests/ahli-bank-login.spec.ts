@@ -1,27 +1,64 @@
 import { test, expect } from '@playwright/test';
-import dotenv from 'dotenv';
+import { CREDENTIALS } from './credentials';
+import { LinearClient } from '@linear/sdk';
 
-test.describe('Al Ahli Bank Login', () => {
-  test('should login to corporate banking', async ({ page }) => {
-    // Navigate to the login page
+async function getOTPFromLinear(): Promise<string> {
+    const linearClient = new LinearClient({
+        apiKey: CREDENTIALS.linearApiKey
+    });
+
+    // Adjust this query based on how you store OTPs in Linear
+    // This is just an example - you'll need to modify based on your Linear setup
+    const issues = await linearClient.issues({
+        filter: {
+            updatedAt: { gt: new Date(Date.now() - 5 * 60 * 1000) }, // Last 5 minutes
+            // Add more filters as needed
+        }
+    });
+
+    // Extract OTP from the most recent relevant issue
+    // Modify this logic based on how your OTP is stored in Linear
+    const latestIssue = issues.nodes[0];
+    if (!latestIssue) {
+        throw new Error('No recent OTP found in Linear');
+    }
+
+    // Extract OTP from issue title or description
+    // This is an example - adjust based on your actual Linear setup
+    const otpMatch = latestIssue.title.match(/OTP:\s*(\d+)/);
+    return otpMatch ? otpMatch[1] : '';
+}
+
+test('Login to Ahli Bank and handle OTP', async ({ page }) => {
+    // Navigate to login page
     await page.goto('https://online.eahli.com/corp/AuthenticationController?__START_TRAN_FLAG__=Y&FORMSGROUP_ID__=AuthenticationFG&__EVENT_ID__=LOAD&FG_BUTTONS__=LOAD&ACTION.LOAD=Y&AuthenticationFG.LOGIN_FLAG=7&BANK_ID=01&LANGUAGE_ID=001');
+
+    // Fill login form
     
-    // Wait for the page to load and the login form to be visible
-    await page.waitForLoadState('networkidle');
+    await page.fill('input[name="AuthenticationFG.USER_PRINCIPAL"]', CREDENTIALS.username);
+    await page.fill('input[name="AuthenticationFG.ACCESS_CODE"]', CREDENTIALS.password);
     
-    // Fill in the login credentials
-    // Note: Replace these with actual test credentials
-    await page.fill('input[name="AuthenticationFG.USER_PRINCIPAL"]', process.env.AHLI_USERNAME || '');
-    await page.fill('input[name="AuthenticationFG.ACCESS_CODE"]', process.env.AHLI_PASSWORD || '');
-    
-    // Click the login button
+    // Click login button
     await page.click('input[type="submit"]');
+
+    // Wait for OTP input field to appear
+    await page.waitForSelector('input[name="AuthenticationFG.OTP_VALUE"]');
+
+    // Get OTP from Linear
+    const otp = await getOTPFromLinear();
     
-    // Wait for navigation after login
-    await page.waitForLoadState('networkidle');
+    // Fill OTP
+    await page.fill('input[name="AuthenticationFG.OTP_VALUE"]', otp);
     
-    // Add assertions to verify successful login
-    // Example: Check if we're on the dashboard page
-    // await expect(page.locator('.dashboard-element')).toBeVisible();
-  });
+    // Submit OTP
+    await page.click('input[type="submit"]');
+
+    // Wait for successful login
+    // Add appropriate selector for the dashboard or landing page
+    await page.waitForSelector('.dashboard-element', { timeout: 30000 });
+
+    // Add your scraping logic here
+    // Example:
+    // const balance = await page.textContent('.account-balance');
+    // const transactions = await page.$$eval('.transaction-row', rows => rows.map(row => row.textContent));
 }); 

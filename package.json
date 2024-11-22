@@ -12,6 +12,7 @@
     "@types/node": "^22.9.1"
   },
   "dependencies": {
+    "@linear/sdk": "^33.0.0",
     "dotenv": "^16.4.5"
   }
 }
