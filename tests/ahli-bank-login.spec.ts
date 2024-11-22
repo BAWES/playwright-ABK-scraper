@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { CREDENTIALS } from './credentials';
+import { CREDENTIALS } from './credentials.ts';
 import { LinearClient } from '@linear/sdk';
 
 async function getOTPFromLinear(): Promise<string> {
@@ -34,7 +34,7 @@ test('Login to Ahli Bank and handle OTP', async ({ page }) => {
     await page.goto('https://online.eahli.com/corp/AuthenticationController?__START_TRAN_FLAG__=Y&FORMSGROUP_ID__=AuthenticationFG&__EVENT_ID__=LOAD&FG_BUTTONS__=LOAD&ACTION.LOAD=Y&AuthenticationFG.LOGIN_FLAG=7&BANK_ID=01&LANGUAGE_ID=001');
 
     // Fill login form
-    
+
     await page.fill('input[name="AuthenticationFG.USER_PRINCIPAL"]', CREDENTIALS.username);
     await page.fill('input[name="AuthenticationFG.ACCESS_CODE"]', CREDENTIALS.password);
     
