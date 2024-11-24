@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { LinearClient, LinearDocument } from "@linear/sdk";
 
+// TODO: Implement similar auth structure as https://www.youtube.com/watch?v=nSHPCLUwwVk&t=123s
+
 test('env variables are set', () => {
   expect(process.env.ABK_USERNAME).toBeDefined();
   expect(process.env.ABK_PASSWORD).toBeDefined();
