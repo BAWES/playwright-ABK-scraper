@@ -35,3 +35,41 @@ test('test finding recent otp from linear', async ({ page }) => {
 
     console.log(otp);
 });
+
+test('delete all OTP-related issues from Linear', async ({ page }) => {
+    // First, fetch all OTP-related issues
+    const issues = await linearClient.issues({
+        first: 100, // Increase this if you have more OTP issues
+        orderBy: LinearDocument.PaginationOrderBy.CreatedAt,
+        filter: {
+            team: { name: { eq: "Finance" } },
+            state: { name: { eq: "Triage" } },
+            title: { startsWith: "ABK" }
+        },
+    });
+
+    console.log(`Found ${issues.nodes.length} OTP-related issues to delete`);
+
+    // Delete each issue
+    for (const issue of issues.nodes) {
+        console.log(`Deleting issue: ${issue.id} - ${issue.title}`);
+        try {
+            await issue.delete();
+            console.log(`Successfully deleted issue: ${issue.id}`);
+        } catch (error) {
+            console.error(`Failed to delete issue ${issue.id}:`, error);
+        }
+    }
+
+    // Verify deletion by trying to fetch OTP issues again
+    const remainingIssues = await linearClient.issues({
+        first: 100,
+        filter: {
+            team: { name: { eq: "Finance" } },
+            state: { name: { eq: "Triage" } },
+            title: { startsWith: "ABK" }
+        },
+    });
+
+    expect(remainingIssues.nodes.length).toBe(0);
+});
