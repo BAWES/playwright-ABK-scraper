@@ -35,33 +35,3 @@ test('test finding recent otp from linear', async ({ page }) => {
 
     console.log(otp);
 });
-
-// test('test getting otp from latest linear issue', async ({ page }) => {
-    
-//     const issues = await linearClient.issues({
-//         first: 1,
-//         orderBy: LinearDocument.PaginationOrderBy.CreatedAt,
-//         filter: {
-//         team: { name: { eq: "Finance" } },
-//         state: { name: { eq: "Triage" } }
-//         }
-//     });
-
-//     console.log(issues);
-
-//     if (!issues.nodes.length) {
-//         console.log(issues);
-//         throw new Error('No OTP issue found in Linear');
-//     }
-
-//     // Extract OTP from issue title/description
-//     const latestIssue = issues.nodes[0];
-//     const otpMatch = latestIssue.description?.match(/(?:OTP(?:\s*-\s*)?)?(\d{5})/);
-    
-//     if (!otpMatch) {
-//         throw new Error('Could not find OTP in latest Linear issue');
-//     }
-
-//     const otp = otpMatch[1];
-//     console.log(otp);
-// });
