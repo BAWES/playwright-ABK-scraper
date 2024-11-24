@@ -11,12 +11,13 @@ test('env variables are set', () => {
 
 
 test('Login to ABK', async ({ page }) => {
+  await page.pause();
   await page.goto('https://online.eahli.com/corp/AuthenticationController?__START_TRAN_FLAG__=Y&FORMSGROUP_ID__=AuthenticationFG&__EVENT_ID__=LOAD&FG_BUTTONS__=LOAD&ACTION.LOAD=Y&AuthenticationFG.LOGIN_FLAG=7&BANK_ID=01&LANGUAGE_ID=001');
-  await page.waitForLoadState('networkidle');
+  // await page.waitForLoadState('networkidle');
   await page.getByLabel('User ID').fill(process.env.ABK_USERNAME!);
   await page.getByLabel('Password').fill(process.env.ABK_PASSWORD!);
   await page.getByRole('button', { name: 'Login' }).click();
-  await page.waitForLoadState('networkidle');
+  // await page.waitForLoadState('networkidle');
 
   // Initialize Linear client
   const linearClient = new LinearClient({ 
@@ -64,6 +65,8 @@ test('Login to ABK', async ({ page }) => {
   if (!otp) {
     throw new Error('Could not extract OTP from Linear issue');
   }
+
+  console.log('OTP:', otp);
 
   // Enter OTP
   await otpInput.fill(otp);
