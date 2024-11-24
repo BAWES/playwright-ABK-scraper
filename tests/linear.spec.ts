@@ -5,6 +5,12 @@ const linearClient = new LinearClient({
     apiKey: process.env.LINEAR_API_KEY
 });
 
+test('env variables are set', () => {
+    expect(process.env.ABK_USERNAME).toBeDefined();
+    expect(process.env.ABK_PASSWORD).toBeDefined();
+    expect(process.env.LINEAR_API_KEY).toBeDefined();
+});
+
 test('test finding recent otp from linear', async ({ page }) => {
     const issues = await linearClient.issues({
         first: 1,

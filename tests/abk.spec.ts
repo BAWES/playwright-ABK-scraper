@@ -3,13 +3,6 @@ import { LinearClient, LinearDocument } from "@linear/sdk";
 
 // TODO: Implement similar auth structure as https://www.youtube.com/watch?v=nSHPCLUwwVk&t=123s
 
-test('env variables are set', () => {
-  expect(process.env.ABK_USERNAME).toBeDefined();
-  expect(process.env.ABK_PASSWORD).toBeDefined();
-  expect(process.env.LINEAR_API_KEY).toBeDefined();
-});
-
-
 test('Login to ABK', async ({ page }) => {
   await page.pause();
   await page.goto('https://online.eahli.com/corp/AuthenticationController?__START_TRAN_FLAG__=Y&FORMSGROUP_ID__=AuthenticationFG&__EVENT_ID__=LOAD&FG_BUTTONS__=LOAD&ACTION.LOAD=Y&AuthenticationFG.LOGIN_FLAG=7&BANK_ID=01&LANGUAGE_ID=001');
