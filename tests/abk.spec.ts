@@ -64,5 +64,7 @@ test('Login to ABK', async ({ page }) => {
   // Enter OTP
   await otpInput.fill(otp);
   await page.getByRole('button', { name: 'Continue' }).click();
-  await page.waitForLoadState('networkidle');
+
+  await page.pause();
+
 });
